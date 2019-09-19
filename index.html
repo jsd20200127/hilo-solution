@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>HiLo</title>
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
+  </head>
+
+  <body>
+    <div id="container">
+      <h1>HiLo</h1>
+      <p>Guess a number from 1 to 100</p>
+      <h2>
+        Number of Guesses remaining:
+        <span id="numberOfGuessesRemaining">5</span>
+      </h2>
+
+      <div class="message"></div>
+
+      <form id="guessForm">
+        <input id="guess" autofocus placeholder="enter your guess">
+
+        <button id="guessBtn" name="Guess" value="guess">Guess</button>
+      </form>
+
+      <button id="reset" name="Reset Game" value="reset">
+        Reset Game
+      </button>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>
