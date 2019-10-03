@@ -1,95 +1,129 @@
 $(function () {
-  let randomNumber = generateRandomNumber()
+  // declare global variables
+  let secretNumber = generateRandomNumber()
   let remainingGuesses = 5
+
+  // hide game over message when page first loads
+  hideGameOverMessage()
+
+  console.log('secretNumber', secretNumber)
+
+  // listening for a submit event
+  $('#guessForm').submit((event) => {
+    event.preventDefault()
+
+    // grab value from text field
+    // and convert to Integer
+    const guess = parseInt($('#guess').val())
+    console.log(guess)
+
+    // display error message when users
+    // enter invalid data (i.e. non number)
+    if (isNaN(guess)) {
+      alert('Invalid input, please enter number')
+      clearGuessField()
+
+      // user "return" keyword exit out of
+      // submit listener when user enters invalid input
+      return
+    }
+
+    compare(guess)
+    clearGuessField()
+
+    console.log('num of guesses', remainingGuesses)
+  })
+
+  $('#reset').click(() => {
+    console.log('clicked on reset button')
+    reset()
+  })
+
+  function compare (userGuess) {
+    if (userGuess > secretNumber) {
+      console.log('Too high')
+      updateMessage('Too high')
+
+      remainingGuesses -= 1
+      displayGuessesRemaining()
+    } else if (userGuess < secretNumber) {
+      console.log('Too low')
+      updateMessage('Too low')
+
+      remainingGuesses -= 1
+      displayGuessesRemaining()
+    } else if (userGuess === secretNumber) {
+      console.log('you guessed correctly!!!')
+      updateMessage('You guessed correctly!!!')
+
+      // disable guess button after you win
+      disableGuessButton()
+    } else {
+      console.log('something wrong happened')
+    }
+
+    // check if user has run out of guesses
+    if (remainingGuesses === 0) {
+      console.log('game over, try again')
+      showGameOverMessage()
+      updateMessage(`Secret Number was ${secretNumber}`)
+
+      // disable guess button after you win
+      disableGuessButton()
+    }
+  }
+
+  function clearGuessField () {
+    $('#guess').val('')
+  }
+
+  function updateMessage (message) {
+    $('.message').text(message)
+  }
 
   function generateRandomNumber () {
     return Math.floor(Math.random() * 100) + 1
   }
 
-  $('#numberOfGuessesRemaining').text(remainingGuesses)
-
-  $('#reset').click(() => {
-    console.log('reset game')
-
-    // set the remaining guesses back to 5
-    remainingGuesses = 5
-
-    // update page with updated remaining guesses count
+  function displayGuessesRemaining () {
     $('#numberOfGuessesRemaining').text(remainingGuesses)
+  }
 
-    // clear out message container
-    $('.message').text('')
+  function disableGuessButton () {
+    $('#guessBtn').attr('disabled', true)
+  }
 
-    // disable guess button
+  function enableGuessButton () {
     $('#guessBtn').attr('disabled', false)
+  }
 
-    // generate new random number
-    randomNumber = generateRandomNumber()
-  })
+  function showGameOverMessage () {
+    $('#gameOverMessage').show()
+  }
 
-  $('#guessForm').submit((event) => {
-    event.preventDefault()
-    console.log('form is submitting')
+  function hideGameOverMessage () {
+    $('#gameOverMessage').hide()
+  }
 
-    console.log(`random number: ${randomNumber}`)
+  function reset () {
+    // set numberOfGuessesRemaining back to 5
+    remainingGuesses = 5
+    displayGuessesRemaining()
 
-    // grab value from input field & convert to number
-    const guess = parseInt($('#guess').val())
-    console.log(guess)
+    // clear out the message container
+    updateMessage('')
 
-    if (isNaN(guess)) {
-      console.log('not a number')
-      alert('Please enter in a number')
+    // hide the game over message
+    hideGameOverMessage()
 
-      // clear text field
-      $('#guess').val('')
+    // activate the guess button
+    enableGuessButton()
 
-      // exit .submit() function
-      return
-    }
+    // clear text field if it contains a value
+    clearGuessField()
 
-    // clear text field
-    $('#guess').val('')
-
-    if (guess > randomNumber) {
-      console.log('too high')
-      remainingGuesses = remainingGuesses - 1
-
-      // update page with message
-      $('.message').text('Too High')
-
-      // update page with updated remaining guesses count
-      $('#numberOfGuessesRemaining').text(remainingGuesses)
-    } else if (guess < randomNumber) {
-      console.log('too low')
-
-      // update page with message
-      $('.message').text('Too Low')
-      remainingGuesses = remainingGuesses - 1
-
-      // update page with updated remaining guesses count
-      $('#numberOfGuessesRemaining').text(remainingGuesses)
-    } else {
-      // they are the same
-      console.log('winner - you guessed correctly')
-
-      // update page with message
-      $('.message').text('You Guessed Correctly!!!')
-
-      // disable guess button
-      $('#guessBtn').attr('disabled', true)
-    }
-
-    // check if user has run out of guesses
-
-    if (remainingGuesses === 0) {
-      console.log('Game over, you lose')
-
-      $('.message').text('Game over, you lose')
-      // disable guess button
-      $('#guessBtn').attr('disabled', true)
-    }
-
-    console.log(`remaining guesses: ${remainingGuesses}`)
-  })
+    // generate new secretNumber
+    secretNumber = generateRandomNumber()
+    console.log('secretNumber', secretNumber)
+  }
 })
